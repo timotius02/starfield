@@ -35,10 +35,40 @@ var square = function() {
     var material = new THREE.MeshBasicMaterial({
         color: 0x0000ff
     });
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.x = Math.floor(Math.random() * 199) - 100; //  (-100  100)
-    cube.position.y = Math.floor(Math.random() * 199) - 100; //  (-100  100)
-    return cube;
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = Math.floor(Math.random() * 299) - 150; //  (-150  150)
+    mesh.position.y = Math.floor(Math.random() * 199) - 100; //  (-100  100)
+    return mesh;
+}
+
+var triangle = function() {
+	var randNum = function(val) {
+		var num = val || 3;
+		var rand = Math.floor(Math.random() * 2);
+		if ( rand === 1) {
+			return Math.floor(Math.random() * num);
+		} 
+		else {
+			return -1 * Math.floor(Math.random() * num);
+		} 
+	}
+
+	var triShape = new THREE.Shape();
+	var originX = randNum(), originY = randNum();
+	triShape.moveTo(originX, originY);
+	triShape.lineTo(randNum(), randNum());
+	triShape.lineTo(randNum(), randNum());
+	triShape.lineTo(originX, originY);
+
+	var geometry = new THREE.ShapeGeometry(triShape);
+
+	var material = new THREE.MeshBasicMaterial({
+        color: 0x0000ff
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = Math.floor(Math.random() * 299) - 150; //  (-150  150)
+    mesh.position.y = Math.floor(Math.random() * 199) - 100; //  (-100  100)
+    return mesh;
 }
 
 var circle = function() {
@@ -48,7 +78,7 @@ var circle = function() {
         color: 0x0000ff
     });
     var circle = new THREE.Mesh(circleGeometry, material);
-    circle.position.x = Math.floor(Math.random() * 199) - 100; //  (-100  100)
+    circle.position.x = Math.floor(Math.random() * 299) - 150; //  (-150  150)
     circle.position.y = Math.floor(Math.random() * 199) - 100; //  (-100  100)
     return circle;
 }
@@ -58,15 +88,16 @@ var render = function() {
 
     for (var i = 0, l = scene.children.length; i < l; i++) {
         var object = scene.children[i];
-        object.position.z += 3;
+        object.position.z += 4;
 
-        if (object.position.z > 90)
-            object.position.z = -200;
+        if (object.position.z > 50)
+            object.position.z = -250;
 
     }
     if (scene.children.length < 1000) {
-        scene.add(square());
-        scene.add(circle());
+    	scene.add(circle());
+    	scene.add(square());
+        scene.add(triangle());
 
     }
 
