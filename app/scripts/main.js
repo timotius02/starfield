@@ -3,41 +3,8 @@
 
 var stats, scene, camera, renderer, container;
 
-var init = function() {
-	container = document.createElement( 'div' );
-	document.body.appendChild( container );
-
-	var info = document.createElement( 'div' );
-	info.style.position = 'absolute';
-	info.style.top = '10px';
-	info.style.width = '100%';
-	info.style.textAlign = 'center';
-	info.innerHTML = 'Starfield Illusion - <a href="https://github.com/timotius02/starfield" target="_blank">Github</a>';
-	container.appendChild( info );
-
-	// FPS Meter
-	stats = new Stats();
-	stats.setMode(0); // 0: fps, 1: ms, 2: mb
-	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.left = '0px';
-	stats.domElement.style.top = '0px';
-	document.body.appendChild(stats.domElement);
-
-	// THREE.js init
-	scene = new THREE.Scene();
-	camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-	camera.position.z = 100;
-
-	renderer = new THREE.WebGLRenderer({alpha: true});
-	renderer.setClearColor( 0x000000, 0 );
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	document.body.appendChild(renderer.domElement);
-
-	initGUI();
-	scene.add(largeRect(13));
-	render();
-}
 var options = {
+	speed: 10,
 	inner: false,
 	innerRadius: 0,
 	outer: false,
@@ -47,6 +14,8 @@ var initGUI = function() {
 	var width = $('#opening').width();
 
 	var gui = new dat.GUI();
+
+	gui.add(options, 'speed', 1, 20);
 
 	gui.add(options, 'inner').onChange(function() {
 		$('#opening').toggle();
@@ -64,7 +33,30 @@ var initGUI = function() {
 		scene.children[0].scale.x = val;
 		scene.children[0].scale.y = val;
 	});
-}
+
+};
+
+var largeRect = function(len) {
+	var length = 2.2 * len,
+        height = len;
+
+    var rectShape = new THREE.Shape();
+    rectShape.moveTo(-length, -height);
+    rectShape.lineTo(-length, height);
+    rectShape.lineTo(length, height);
+    rectShape.lineTo(length, -height);
+    rectShape.lineTo(-length, -height);
+
+    var geometry = new THREE.ShapeGeometry(rectShape);
+
+    var material = new THREE.MeshBasicMaterial({
+        color: 0x000000
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+   	mesh.position.z = 75;
+   	mesh.visible = false;
+    return mesh;
+};
 
 var square = function() {
     var rectLength = 1,
@@ -130,34 +122,12 @@ var circle = function() {
     return circle;
 };
 
-var largeRect = function(len) {
-	var length = 2.2 * len,
-        height = len;
-
-    var rectShape = new THREE.Shape();
-    rectShape.moveTo(-length, -height);
-    rectShape.lineTo(-length, height);
-    rectShape.lineTo(length, height);
-    rectShape.lineTo(length, -height);
-    rectShape.lineTo(-length, -height);
-
-    var geometry = new THREE.ShapeGeometry(rectShape);
-
-    var material = new THREE.MeshBasicMaterial({
-        color: 0x000000
-    });
-    var mesh = new THREE.Mesh(geometry, material);
-   	mesh.position.z = 75;
-   	mesh.visible = false;
-    return mesh;
-};
-
 var render = function() {
     requestAnimationFrame(render);
 
     for (var i = 1, l = scene.children.length; i < l; i++) {
         var object = scene.children[i];
-        object.position.z += 5;
+        object.position.z += options.speed;
 
         if (object.position.z > 50) {
             object.position.z = -250;
@@ -174,5 +144,43 @@ var render = function() {
 
     stats.update();
 };
+
+
+var init = function() {
+	container = document.createElement( 'div' );
+	document.body.appendChild( container );
+
+	var info = document.createElement( 'div' );
+	info.style.position = 'absolute';
+	info.style.top = '10px';
+	info.style.width = '100%';
+	info.style.textAlign = 'center';
+	info.innerHTML = 'Starfield Illusion - <a href="https://github.com/timotius02/starfield" target="_blank">Github</a>';
+	container.appendChild( info );
+
+	// FPS Meter
+	stats = new Stats();
+	stats.setMode(0); // 0: fps, 1: ms, 2: mb
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left = '0px';
+	stats.domElement.style.top = '0px';
+	document.body.appendChild(stats.domElement);
+
+	// THREE.js init
+	scene = new THREE.Scene();
+	camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+	camera.position.z = 100;
+
+	renderer = new THREE.WebGLRenderer({alpha: true});
+	renderer.setClearColor( 0x000000, 0 );
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+
+	initGUI();
+	scene.add(largeRect(13));
+	render();
+};
+
+
 
 init();
