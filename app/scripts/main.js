@@ -1,33 +1,49 @@
 /* jshint devel:true */
 'use strict';
 
-var stats = new Stats();
-stats.setMode(0); // 0: fps, 1: ms, 2: mb
+var stats, scene, camera, renderer, container;
 
-// align top-left
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.left = '0px';
-stats.domElement.style.top = '0px';
+var init = function() {
+	container = document.createElement( 'div' );
+	document.body.appendChild( container );
 
-document.body.appendChild(stats.domElement);
+	var info = document.createElement( 'div' );
+	info.style.position = 'absolute';
+	info.style.top = '10px';
+	info.style.width = '100%';
+	info.style.textAlign = 'center';
+	info.innerHTML = 'Starfield Illusion - <a href="https://github.com/timotius02/starfield" target="_blank">Github</a>';
+	container.appendChild( info );
 
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 100;
+	// FPS Meter
+	stats = new Stats();
+	stats.setMode(0); // 0: fps, 1: ms, 2: mb
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left = '0px';
+	stats.domElement.style.top = '0px';
+	document.body.appendChild(stats.domElement);
 
-var renderer = new THREE.WebGLRenderer({alpha: true});
-renderer.setClearColor( 0x000000, 0 );
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+	// THREE.js init
+	scene = new THREE.Scene();
+	camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+	camera.position.z = 100;
 
+	renderer = new THREE.WebGLRenderer({alpha: true});
+	renderer.setClearColor( 0x000000, 0 );
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
 
+	initGUI();
+	scene.add(largeRect(13));
+	render();
+}
 var options = {
 	inner: false,
 	innerRadius: 0,
 	outer: false,
 	openingRadius: 1
 };
-function initGUI() {
+var initGUI = function() {
 	var width = $('#opening').width();
 
 	var gui = new dat.GUI();
@@ -159,6 +175,4 @@ var render = function() {
     stats.update();
 };
 
-initGUI();
-scene.add(largeRect(13));
-render();
+init();

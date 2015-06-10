@@ -1,9 +1,14 @@
 // bower:scss
 // endbower
+@font-face {
+  font-family: Roboto;
+  src: url(../fonts/Roboto-Regular.ttf);
+  font-weight: 400;
+}
 
 body {
   background: #fff;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: #333;
   margin: 0;
   height: 100vh;
