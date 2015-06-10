@@ -20,25 +20,35 @@ renderer.setClearColor( 0x000000, 0 );
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+
+
 var options = {
 	inner: false,
-	innerRadius: 1,
+	innerRadius: 0,
 	outer: false,
 	openingRadius: 1
 }
 function initGUI() {
+	var width = $('#opening').width()
 
 	var gui = new dat.GUI();
 
 	gui.add(options, 'inner').onChange(function(val) {
-		inner = val;
+		$('#opening').toggle();
 	})
-	gui.add(options, 'innerRadius', 1, 20);
+	gui.add(options, 'innerRadius', 0, 1000).onChange(function(val){
+		console.log($('#opening').width());
+		$('#opening').width(  width + Math.floor(2 * val));
+		$('#opening').css('left', - val);
+	});
 
 	gui.add(options, 'outer').onChange(function(val) {
-		outer = val;
+		scene.children[0].visible = val;
 	});
-	gui.add(options, 'openingRadius', 1, 20);
+	gui.add(options, 'openingRadius', 0.1, 1.5).onChange(function(val) {
+		scene.children[0].scale.x = val;
+		scene.children[0].scale.y = val;
+	})
 }
 
 var square = function() {
@@ -105,30 +115,41 @@ var circle = function() {
     return circle;
 }
 
-var largeCircle = function(len) {
-	var radius = len || 1;
-	var circleGeometry = new THREE.CircleGeometry(radius, 50);
-	var material = new THREE.MeshBasicMaterial({
+var largeRect = function(len) {
+	var length = 2.2 * len,
+        height = len;
+
+    var rectShape = new THREE.Shape();
+    rectShape.moveTo(-length, -height);
+    rectShape.lineTo(-length, height);
+    rectShape.lineTo(length, height);
+    rectShape.lineTo(length, -height);
+    rectShape.lineTo(-length, -height);
+
+    var geometry = new THREE.ShapeGeometry(rectShape);
+
+    var material = new THREE.MeshBasicMaterial({
         color: 0x000000
     });
-    var circle = new THREE.Mesh(circleGeometry, material);
-    circle.position.z  = 75;
-    return circle;
+    var mesh = new THREE.Mesh(geometry, material);
+   	mesh.position.z = 75;
+   	mesh.visible = false;
+    return mesh;
 }
 
-scene.add(largeCircle(20));
+
 var render = function() {
     requestAnimationFrame(render);
 
     for (var i = 1, l = scene.children.length; i < l; i++) {
         var object = scene.children[i];
-        object.position.z += 4;
+        object.position.z += 5;
 
         if (object.position.z > 50)
             object.position.z = -250;
 
     }
-    if (scene.children.length < 1500) {
+    if (scene.children.length < 2000) {
     	scene.add(circle());
     	scene.add(square());
         scene.add(triangle());
@@ -140,4 +161,5 @@ var render = function() {
 };
 
 initGUI();
+scene.add(largeRect(13));
 render();
