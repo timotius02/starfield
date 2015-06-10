@@ -24,7 +24,7 @@ gulp.task('styles', function () {
 });
 
 gulp.task('jshint', function () {
-  return gulp.src('app/scripts/**/*.js')
+  return gulp.src('app/scripts/main.js')
     .pipe(reload({stream: true, once: true}))
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
@@ -119,6 +119,15 @@ gulp.task('wiredep', function () {
 
 gulp.task('build', ['jshint', 'html', 'images', 'fonts', 'extras'], function () {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
+});
+
+gulp.task('deploy', function() {
+  return gulp.src('./dist/**/*')
+    .pipe($.ghPages({
+      branch: 'gh-pages',
+      remoteUrl: 'https://github.com/timotius02/starfield.git',
+      force: true
+    }));
 });
 
 gulp.task('default', ['clean'], function () {

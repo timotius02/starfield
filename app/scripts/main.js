@@ -1,4 +1,6 @@
 /* jshint devel:true */
+'use strict';
+
 var stats = new Stats();
 stats.setMode(0); // 0: fps, 1: ms, 2: mb
 
@@ -9,8 +11,6 @@ stats.domElement.style.top = '0px';
 
 document.body.appendChild(stats.domElement);
 
-var inner = false;
-var outer = false;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 100;
@@ -21,22 +21,21 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 
-
 var options = {
 	inner: false,
 	innerRadius: 0,
 	outer: false,
 	openingRadius: 1
-}
+};
 function initGUI() {
-	var width = $('#opening').width()
+	var width = $('#opening').width();
 
 	var gui = new dat.GUI();
 
-	gui.add(options, 'inner').onChange(function(val) {
+	gui.add(options, 'inner').onChange(function() {
 		$('#opening').toggle();
-	})
-	gui.add(options, 'innerRadius', 0, 1000).onChange(function(val){
+	});
+	gui.add(options, 'innerRadius', 0, 500).onChange(function(val){
 		console.log($('#opening').width());
 		$('#opening').width(  width + Math.floor(2 * val));
 		$('#opening').css('left', - val);
@@ -48,7 +47,7 @@ function initGUI() {
 	gui.add(options, 'openingRadius', 0.1, 1.5).onChange(function(val) {
 		scene.children[0].scale.x = val;
 		scene.children[0].scale.y = val;
-	})
+	});
 }
 
 var square = function() {
@@ -71,7 +70,7 @@ var square = function() {
     mesh.position.x = Math.floor(Math.random() * 299) - 150; //  (-150  150)
     mesh.position.y = Math.floor(Math.random() * 199) - 100; //  (-100  100)
     return mesh;
-}
+};
 
 var triangle = function() {
 	var randNum = function(val) {
@@ -83,7 +82,7 @@ var triangle = function() {
 		else {
 			return -1 * Math.floor(Math.random() * num);
 		} 
-	}
+	};
 
 	var triShape = new THREE.Shape();
 	var originX = randNum(), originY = randNum();
@@ -101,7 +100,7 @@ var triangle = function() {
     mesh.position.x = Math.floor(Math.random() * 299) - 150; //  (-150  150)
     mesh.position.y = Math.floor(Math.random() * 199) - 100; //  (-100  100)
     return mesh;
-}
+};
 
 var circle = function() {
     var circleGeometry = new THREE.CircleGeometry(1, 50);
@@ -113,7 +112,7 @@ var circle = function() {
     circle.position.x = Math.floor(Math.random() * 299) - 150; //  (-150  150)
     circle.position.y = Math.floor(Math.random() * 199) - 100; //  (-100  100)
     return circle;
-}
+};
 
 var largeRect = function(len) {
 	var length = 2.2 * len,
@@ -135,8 +134,7 @@ var largeRect = function(len) {
    	mesh.position.z = 75;
    	mesh.visible = false;
     return mesh;
-}
-
+};
 
 var render = function() {
     requestAnimationFrame(render);
@@ -145,11 +143,12 @@ var render = function() {
         var object = scene.children[i];
         object.position.z += 5;
 
-        if (object.position.z > 50)
+        if (object.position.z > 50) {
             object.position.z = -250;
+        }
 
     }
-    if (scene.children.length < 2000) {
+    if (scene.children.length < 1500) {
     	scene.add(circle());
     	scene.add(square());
         scene.add(triangle());
@@ -157,7 +156,7 @@ var render = function() {
 
     renderer.render(scene, camera);
 
-    stats.update()
+    stats.update();
 };
 
 initGUI();
