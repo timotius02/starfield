@@ -4,8 +4,8 @@ Parallax Illusion Built with Three.js. Inspired by ["The Moon Terminator Illusio
 ![Screenshot](starfield.png?raw=true)
 
 ## Instructions
-* Cover the middle using the *inner* and *innerRadius* controls and you will appear to be moving much faster 
-* Cover the edges *outer* and *outerRadius* controls and you will appear to be moving much slower
+* Cover the middle using the **inner** and **innerRadius** controls and you will appear to be moving much faster 
+* Cover the edges usingthe **outer** and **outerRadius** controls and you will appear to be moving much slower
 
 ## Development
 Project requires Gulp to run tasks. To run:

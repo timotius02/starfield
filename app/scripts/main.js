@@ -4,6 +4,7 @@
 var stats, scene, camera, renderer, container;
 
 var options = {
+	instructions: true,
 	speed: 10,
 	inner: false,
 	innerRadius: 0,
@@ -15,13 +16,15 @@ var initGUI = function() {
 
 	var gui = new dat.GUI();
 
+	gui.add(options, 'instructions').onChange(function() {
+		$('#instructions').toggle();
+	});
 	gui.add(options, 'speed', 1, 20);
 
 	gui.add(options, 'inner').onChange(function() {
 		$('#opening').toggle();
 	});
 	gui.add(options, 'innerRadius', 0, 500).onChange(function(val){
-		console.log($('#opening').width());
 		$('#opening').width(  width + Math.floor(2 * val));
 		$('#opening').css('left', - val);
 	});
@@ -147,16 +150,6 @@ var render = function() {
 
 
 var init = function() {
-	container = document.createElement( 'div' );
-	document.body.appendChild( container );
-
-	var info = document.createElement( 'div' );
-	info.style.position = 'absolute';
-	info.style.top = '10px';
-	info.style.width = '100%';
-	info.style.textAlign = 'center';
-	info.innerHTML = 'Starfield Illusion - <a href="https://github.com/timotius02/starfield" target="_blank">Github</a>';
-	container.appendChild( info );
 
 	// FPS Meter
 	stats = new Stats();
