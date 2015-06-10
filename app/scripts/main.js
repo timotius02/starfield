@@ -9,15 +9,37 @@ stats.domElement.style.top = '0px';
 
 document.body.appendChild(stats.domElement);
 
-
+var inner = false;
+var outer = false;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 100;
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(0xffffff);
+var renderer = new THREE.WebGLRenderer({alpha: true});
+renderer.setClearColor( 0x000000, 0 );
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+var options = {
+	inner: false,
+	innerRadius: 1,
+	outer: false,
+	openingRadius: 1
+}
+function initGUI() {
+
+	var gui = new dat.GUI();
+
+	gui.add(options, 'inner').onChange(function(val) {
+		inner = val;
+	})
+	gui.add(options, 'innerRadius', 1, 20);
+
+	gui.add(options, 'outer').onChange(function(val) {
+		outer = val;
+	});
+	gui.add(options, 'openingRadius', 1, 20);
+}
 
 var square = function() {
     var rectLength = 1,
@@ -83,10 +105,22 @@ var circle = function() {
     return circle;
 }
 
+var largeCircle = function(len) {
+	var radius = len || 1;
+	var circleGeometry = new THREE.CircleGeometry(radius, 50);
+	var material = new THREE.MeshBasicMaterial({
+        color: 0x000000
+    });
+    var circle = new THREE.Mesh(circleGeometry, material);
+    circle.position.z  = 75;
+    return circle;
+}
+
+scene.add(largeCircle(20));
 var render = function() {
     requestAnimationFrame(render);
 
-    for (var i = 0, l = scene.children.length; i < l; i++) {
+    for (var i = 1, l = scene.children.length; i < l; i++) {
         var object = scene.children[i];
         object.position.z += 4;
 
@@ -94,11 +128,10 @@ var render = function() {
             object.position.z = -250;
 
     }
-    if (scene.children.length < 1000) {
+    if (scene.children.length < 1500) {
     	scene.add(circle());
     	scene.add(square());
         scene.add(triangle());
-
     }
 
     renderer.render(scene, camera);
@@ -106,4 +139,5 @@ var render = function() {
     stats.update()
 };
 
+initGUI();
 render();
