@@ -1,7 +1,7 @@
 /* jshint devel:true */
 'use strict';
 
-var stats, scene, camera, renderer, container;
+var stats, scene, camera, renderer;
 
 var options = {
 	instructions: true,
