@@ -12,7 +12,7 @@ Project requires Gulp to run tasks. To run:
 
 ```bh
 $ git clone https://github.com/timotius02/starfield.git
-$ cd electron-file-explorer
+$ cd starfield
 $ npm install
 $ gulp serve
 ```
